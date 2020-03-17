@@ -1,5 +1,6 @@
 package com.bridgelabz.service.Test;
 
+import com.bridgelabz.exception.StateCensusAnalyserException;
 import com.bridgelabz.service.StateCensusAnalyser;
 import org.junit.Assert;
 import org.junit.Test;
@@ -7,10 +8,26 @@ import org.junit.Test;
 import java.io.IOException;
 
 public class StateCensusAnalyserTest {
+    StateCensusAnalyser stateCensusAnalyser;
+    String STATE_CSV_FILE_PATH;
+
     @Test
-    public void givenStateCensusCSVFile_WhenTrue_NumberOfRecordShouldMatch() throws IOException {
-        StateCensusAnalyser stateCensusAnalyser = new StateCensusAnalyser();
-        int countRecord = stateCensusAnalyser.loadCensusCSVData();
+    public void givenStateCensusCSVFile_WhenTrue_NumberOfRecordShouldMatch() throws StateCensusAnalyserException {
+        STATE_CSV_FILE_PATH = "./src/test/resources/StateCensusData.csv";
+        stateCensusAnalyser = new StateCensusAnalyser();
+        int countRecord = stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
         Assert.assertEquals(countRecord, 29);
+    }
+
+    @Test
+    public void givenStateCensusCsvFile_WhenIncorrect_ShouldReturnCustomException() {
+        STATE_CSV_FILE_PATH = "./src/tested/resources/StateCensusData.csv";
+        stateCensusAnalyser = new StateCensusAnalyser();
+        try {
+            stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
+
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.type);
+        }
     }
 }
