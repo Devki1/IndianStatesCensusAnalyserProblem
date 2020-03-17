@@ -1,5 +1,6 @@
 package com.bridgelabz.service;
 
+import com.bridgelabz.exception.StateCensusAnalyserException;
 import com.bridgelabz.model.CSVStateCensus;
 import com.opencsv.CSVReader;
 import com.opencsv.bean.CsvToBean;
@@ -8,19 +9,19 @@ import com.opencsv.exceptions.CsvValidationException;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Iterator;
 
 public class StateCensusAnalyser {
-    //Take the path of STATE_CSV_FILE_PATH
-    public static final String STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCensusData.csv";
     int countRecord = 0;
+    ;
 
     //Reading and printing the data csv file
-    public int loadCensusCSVData() throws IOException {
+    public int loadCensusCSVData(String getPaths) throws StateCensusAnalyserException {
         try (
-                Reader reader = Files.newBufferedReader(Paths.get(STATE_CSV_FILE_PATH));
+                Reader reader = Files.newBufferedReader(Paths.get(getPaths));
                 CSVReader csvReader = new CSVReader(reader);
         ) {
             //POJO file iterate and printing the data of csv file.
@@ -29,7 +30,6 @@ public class StateCensusAnalyser {
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
             Iterator<CSVStateCensus> csvStateCensusIterator = csvToBean.iterator();
-
             while (csvStateCensusIterator.hasNext()) {
                 CSVStateCensus csvStateCensus = csvStateCensusIterator.next();
                 System.out.println("State : " + csvStateCensus.State);
@@ -37,8 +37,10 @@ public class StateCensusAnalyser {
                 System.out.println("Population : " + csvStateCensus.AreaInSqKm);
                 System.out.println("DensityPerSqKm: " + csvStateCensus.DensityPerSqKm);
                 countRecord++;
-               // System.out.println(countRecord);
+                System.out.println(countRecord);
             }
+        } catch (IOException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.getMessage());
         }
         return countRecord;
     }
