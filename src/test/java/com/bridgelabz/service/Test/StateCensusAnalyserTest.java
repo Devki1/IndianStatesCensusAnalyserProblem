@@ -40,4 +40,14 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE_TYPE, e.type);
         }
     }
+    @Test
+    public void givenStateCensusCSVFileCorrect_WhenDelimiterIncorrect_ShouldReturnCustomException() {
+        STATE_CSV_FILE_PATH = "./src/test/resources/StateCensusData (copy).csv";
+        stateCensusAnalyser = new StateCensusAnalyser();
+        try {
+            stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.INCORRECT_DELIMITER,e.type);
+        }
+    }
 }
