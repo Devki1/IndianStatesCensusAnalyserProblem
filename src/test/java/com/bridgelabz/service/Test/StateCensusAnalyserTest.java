@@ -47,7 +47,7 @@ public class StateCensusAnalyserTest {
         try {
             stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
         } catch (StateCensusAnalyserException e) {
-            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.INCORRECT_DELIMITER,e.type);
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_INCORRECT_DELIMITER,e.type);
         }
     }
 }
