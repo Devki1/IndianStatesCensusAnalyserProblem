@@ -5,7 +5,7 @@ public class StateCensusAnalyserException extends Exception {
     }
 
     public enum Exceptiontype {
-        ENTERED_WRONG_FILE_TYPE, INCORRECT_DELIMITER, ENTERED_WRONG_FILE;
+        ENTERED_WRONG_FILE_TYPE, ENTERED_INCORRECT_DELIMITER, ENTERED_WRONG_FILE;
     }
 
     public Exceptiontype type;
