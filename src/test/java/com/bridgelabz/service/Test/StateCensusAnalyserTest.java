@@ -5,7 +5,7 @@ import com.bridgelabz.service.StateCensusAnalyser;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.File;
 
 public class StateCensusAnalyserTest {
     StateCensusAnalyser stateCensusAnalyser;
@@ -25,9 +25,19 @@ public class StateCensusAnalyserTest {
         stateCensusAnalyser = new StateCensusAnalyser();
         try {
             stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
-
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.type);
+        }
+    }
+
+    @Test
+    public void givenStateCensusCSVFile_WhenTypeIncorrect_ShouldReturnCustomException() {
+        STATE_CSV_FILE_PATH = "./src/test/resources/StateCensusData.pdf";
+        stateCensusAnalyser = new StateCensusAnalyser();
+        try {
+            StateCensusAnalyser.getFileExtension(new File(STATE_CSV_FILE_PATH));
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE_TYPE, e.type);
         }
     }
 }
