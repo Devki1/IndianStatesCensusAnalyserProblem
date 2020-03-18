@@ -16,7 +16,7 @@ import java.util.Iterator;
 public class StateCensus {
     int countRecord = 0;
 
-    public int loadCensusCodeCSVData(String getPaths) throws IOException {
+    public int loadCensusCodeCSVData(String getPaths) throws IOException, StateCensusAnalyserException {
         try (
                 Reader reader = Files.newBufferedReader(Paths.get(getPaths));
                 CSVReader csvReader = new CSVReader(reader);
@@ -35,6 +35,8 @@ public class StateCensus {
                 countRecord++;
                 System.out.println(countRecord);
             }
+        } catch (IOException e) {
+            throw new StateCensusAnalyserException(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.getMessage());
         }
         return countRecord;
     }
