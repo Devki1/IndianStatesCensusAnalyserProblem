@@ -84,4 +84,15 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.type);
         }
     }
+
+    @Test
+    public void givenStateStateCensusCSVFile_WhenTypeIncorrect_ShouldReturnCustomException() {
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/tested/resources/StateCode.txt";
+        stateCensus = new StateCensus();
+        try {
+            StateCensus.getFileExtension(new File(STATE_CSV_FILE_PATH));
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE_TYPE, e.type);
+        }
+    }
 }
