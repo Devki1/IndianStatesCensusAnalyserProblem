@@ -65,11 +65,23 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_INCORRECT_DELIMITER, e.type);
         }
     }
+
     @Test
-    public void givenStateCensusCode_WhenTrue_NumberOfRecordShouldBeMatch() throws IOException {
+    public void givenStateCensusCode_WhenTrue_NumberOfRecordShouldBeMatch() throws IOException, StateCensusAnalyserException {
         STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCode.csv";
         stateCensus = new StateCensus();
         int countRecord = stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
         Assert.assertEquals(countRecord, 37);
+    }
+
+    @Test
+    public void givenStateCodeCensusCsvFile_WhenIncorrect_ShouldReturnCustomException() throws IOException {
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/tested/resources/StateCode.csv";
+        stateCensus = new StateCensus();
+        try {
+            stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
+        } catch (StateCensusAnalyserException e) {
+            Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_WRONG_FILE, e.type);
+        }
     }
 }
