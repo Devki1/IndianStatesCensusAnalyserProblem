@@ -1,15 +1,18 @@
 package com.bridgelabz.service.Test;
 
 import com.bridgelabz.exception.StateCensusAnalyserException;
+import com.bridgelabz.service.StateCensus;
 import com.bridgelabz.service.StateCensusAnalyser;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 
 public class StateCensusAnalyserTest {
     StateCensusAnalyser stateCensusAnalyser;
     String STATE_CSV_FILE_PATH;
+    StateCensus stateCensus;
 
     @Test
     public void givenStateCensusCSVFile_WhenTrue_NumberOfRecordShouldMatch() throws StateCensusAnalyserException {
@@ -61,5 +64,12 @@ public class StateCensusAnalyserTest {
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_INCORRECT_DELIMITER, e.type);
         }
+    }
+    @Test
+    public void givenStateCensusCode_WhenTrue_NumberOfRecordShouldBeMatch() throws IOException {
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCode.csv";
+        stateCensus = new StateCensus();
+        int countRecord = stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
+        Assert.assertEquals(countRecord, 37);
     }
 }
