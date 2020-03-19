@@ -1,6 +1,6 @@
 SrNo,StateName,TIN,StateCode
 1,Andaman and Nicobar Islands,35,AN
-2,Andhra Pradesh;28,AP
+2,Andhra Pradesh,28,AP
 3,Andhra Pradesh New,37,AD
 4,Arunachal Pradesh,12,AR
 5,Assam,18,AS
@@ -9,7 +9,7 @@ SrNo,StateName,TIN,StateCode
 8,Chattisgarh,22,CT
 9,Dadra and Nagar Haveli,26,DN
 10,Daman and Diu,25,DD
-11,Delhi,07.DL
+11,Delhi,07,DL
 12,Goa,30,GA
 13,Gujarat,24,GJ
 14,Haryana,06,HR
