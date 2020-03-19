@@ -57,7 +57,7 @@ public class StateCensusAnalyserTest {
 
     @Test
     public void givenStateCensusCSVFile_WhenCorrectButCsvHeaderIncorrect_ShouldReturnCustomException() {
-        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCensusData2.csv";
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyserProblem/src/test/resources/StateCensusData2.csv";
         stateCensusAnalyser = new StateCensusAnalyser();
         try {
             stateCensusAnalyser.loadCensusCSVData(STATE_CSV_FILE_PATH);
@@ -68,7 +68,7 @@ public class StateCensusAnalyserTest {
 
     @Test
     public void givenStateCensusCode_WhenTrue_NumberOfRecordShouldBeMatch() throws IOException, StateCensusAnalyserException {
-        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCode.csv";
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyserProblem/src/test/resources/StateCode.csv";
         stateCensus = new StateCensus();
         int countRecord = stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
         Assert.assertEquals(countRecord, 37);
@@ -98,7 +98,7 @@ public class StateCensusAnalyserTest {
 
     @Test
     public void givenStateCensusCodeCSVFileCorrect_WhenDelimiterIncorrect_ShouldReturnCustomException() throws IOException {
-        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCodeDataCopy1.csv";
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyserProblem/src/test/resources/StateCodeDataCopy1.csv";
         stateCensus = new StateCensus();
         try {
             stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
@@ -109,16 +109,13 @@ public class StateCensusAnalyserTest {
 
     @Test
     public void givenStateCensusCodeCSVFile_WhenHeaderIncorrect_ShouldReturnCustomException() {
-        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyzerProblem/src/test/resources/StateCodeDataCopy2.csv";
+        STATE_CSV_FILE_PATH = "/home/user/IdeaProjects/IndianStatesCensusAnalyserProblem/src/test/resources/StateCodeDataCopy2.csv";
         stateCensus = new StateCensus();
         try {
             stateCensus.loadCensusCodeCSVData(STATE_CSV_FILE_PATH);
         } catch (StateCensusAnalyserException e) {
             Assert.assertEquals(StateCensusAnalyserException.Exceptiontype.ENTERED_INCORRECT_DELIMITER_OR_HEADER,e.type);
-
-
         }
-
     }
 }
 
