@@ -20,9 +20,6 @@ import java.util.Iterator;
 import static com.bridgelabz.exception.StateCensusAnalyserException.Exceptiontype.*;
 
 public class StateCensusAnalyser {
-    //private static String getPaths;
-    //int countRecord = 0;
-
     //Reading and printing the data csv file
     public int loadCensusCSVData(String filePath) throws StateCensusAnalyserException, IOException {
         int countRecord = 0;
@@ -71,7 +68,7 @@ public class StateCensusAnalyser {
             extension = fileName.substring(fileName.lastIndexOf(".") + 1);
         }
         if (!(extension.equals("csv"))) {
-            throw new StateCensusAnalyserException(ENTERED_WRONG_FILE_TYPE, "FILE TYPE IS INCORRECT");
+            throw new StateCensusAnalyserException(ENTERED_WRONG_FILE_TYPE, "FILE TYPE  INCORRECT");
         }
     }
 
