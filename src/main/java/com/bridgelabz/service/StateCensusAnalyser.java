@@ -19,14 +19,15 @@ import java.util.Iterator;
 
 import static com.bridgelabz.exception.StateCensusAnalyserException.Exceptiontype.*;
 
-
 public class StateCensusAnalyser {
     int countRecord = 0;
 
     //Reading the data from csv file
-    public int loadCensusCsvData(String SAMPLE_CSV_PATH) throws StateCensusAnalyserException {
+    public int loadCensusCsvData(String SAMPLE_CSV_PATH) throws StateCensusAnalyserException, CSVBuilderException {
+
         try (Reader reader = Files.newBufferedReader(Paths.get(SAMPLE_CSV_PATH));) {
-            Iterator<CSVStateCensus> censusCSVIterator = new OpenCsvBuilder().getCSVFileIterator(reader, CSVStateCensus.class);
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<CSVStateCensus> censusCSVIterator = csvBuilder.getCSVFileIterator(reader, CSVStateCensus.class);
             while (censusCSVIterator.hasNext()) {
                 CSVStateCensus csvStateCensus = censusCSVIterator.next();
                 countRecord++;
@@ -42,10 +43,10 @@ public class StateCensusAnalyser {
     }
 
     //Reading the data from statecode file
-    public int loadSateCodeCsvData(String CSV_PATH) throws StateCensusAnalyserException {
+    public int loadSateCodeCsvData(String CSV_PATH) throws StateCensusAnalyserException, CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(CSV_PATH));) {
-            Iterator<CSVState> csvStatesCodeIterator = new OpenCsvBuilder()
-                    .getCSVFileIterator(reader, CSVState.class);
+            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            Iterator<CSVState> csvStatesCodeIterator = csvBuilder.getCSVFileIterator(reader, CSVState.class);
 
             while (csvStatesCodeIterator.hasNext()) {
                 countRecord++;
