@@ -7,6 +7,7 @@ import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
 import java.util.Iterator;
+import java.util.List;
 
 public class OpenCsvBuilder<E> implements ICSVBuilder {
     //Generic method to iterate through csv file
@@ -20,7 +21,24 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
             Iterator<E> censusCSVIterator = csvToBean.iterator();
             return censusCSVIterator;
         } catch (IllegalStateException e) {
-            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ILLEGAL_STATE,e.getMessage());
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ILLEGAL_STATE, e.getMessage());
+        }
+    }
+
+
+    @Override
+    public List getCSVFileList(Reader reader, Class csvClass) throws CSVBuilderException {
+        return this.getCSVBean(reader, csvClass).parse();
+    }
+
+    private CsvToBean<E> getCSVBean(Reader reader, Class csvClass) throws CSVBuilderException {
+        try {
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(csvClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            return csvToBeanBuilder.build();
+        } catch (IllegalStateException e) {
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ILLEGAL_STATE, e.getMessage());
         }
     }
 }
