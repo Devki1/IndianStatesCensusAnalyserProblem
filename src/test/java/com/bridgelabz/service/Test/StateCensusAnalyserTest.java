@@ -2,8 +2,10 @@ package com.bridgelabz.service.Test;
 
 import com.bridgelabz.exception.CSVBuilderException;
 import com.bridgelabz.exception.StateCensusAnalyserException;
+import com.bridgelabz.model.CSVStateCensus;
 import com.bridgelabz.service.StateCensus;
 import com.bridgelabz.service.StateCensusAnalyser;
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -110,5 +112,41 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(CSVBuilderException.Exceptiontype.ENTERED_INCORRECT_DELIMITER_OR_HEADER, e.type);
         }
     }
-}
 
+    @Test
+    public void givenStateCensusCsvFile_WhenSortedOnState_ShouldReturnSortedList() {
+        try {
+            stateCensusAnalyser.loadSateCodeCsvData(SIMPLE_CSV_PATH);
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData();
+            CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+            Assert.assertEquals("Andhra Pradesh", censusCSV[0].getState());
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenStateCensusCsvFile_WhenSortedOnState_ShouldReturnSortedList1() {
+        try {
+            stateCensusAnalyser.loadSateCodeCsvData(SIMPLE_CSV_PATH);
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData();
+            CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+            Assert.assertEquals("Madhya Pradesh", censusCSV[13].getState());
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenStateCensusCsvFile_WhenSortedImproperlyOnState_ShouldNotReturnSortedList() {
+        try {
+            stateCensusAnalyser.loadSateCodeCsvData(SIMPLE_CSV_PATH);
+            String sortedCensusData = stateCensusAnalyser.getStateWiseSortedCensusData();
+            CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+            Assert.assertNotEquals("Maharashta", censusCSV[0].getState());
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+}
