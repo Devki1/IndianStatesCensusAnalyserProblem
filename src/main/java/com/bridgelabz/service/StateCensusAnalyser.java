@@ -18,11 +18,11 @@ import java.util.List;
 public class StateCensusAnalyser {
     List<CSVStateCensus> stateCensusRecords = null;
     List<CSVState> stateCensusCodesRecord = null;
+    ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
 
     //Reading and printing data from csv file
     public int loadCensusCsvData(String SAMPLE_CSV_PATH) throws CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(SAMPLE_CSV_PATH));) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             stateCensusRecords = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
             return stateCensusRecords.size();
         } catch (IOException e) {
@@ -34,7 +34,7 @@ public class StateCensusAnalyser {
 
     public int loadSateCodeCsvData(String CSV_PATH) throws CSVBuilderException {
         try (Reader reader = Files.newBufferedReader(Paths.get(CSV_PATH));) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            // ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             stateCensusCodesRecord = csvBuilder.getCSVFileList(reader, CSVState.class);
             return stateCensusCodesRecord.size();
         } catch (IOException e) {
@@ -56,25 +56,35 @@ public class StateCensusAnalyser {
         }
     }
 
-    //Sorting in a  JSON formats
+    //Sorting in a  JSON formats to StateCensusData
     public String getStateWiseSortedCensusData() throws CSVBuilderException {
         if (stateCensusRecords == null || stateCensusRecords.size() == 0)
-            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "NO_CENSUS_DATA");
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
         Comparator<CSVStateCensus> censusCSVComparator = Comparator.comparing(csvStateCensus -> csvStateCensus.getState());
-        this.sort(censusCSVComparator);
+        this.sort(censusCSVComparator, stateCensusCodesRecord);
         String sortedStateCensusJson = new Gson().toJson(stateCensusRecords);
         return sortedStateCensusJson;
     }
 
-    //Sorting CSV State  census data
-    public void sort(Comparator<CSVStateCensus> censusCSVComparator) {
-        for (int iterate = 0; iterate < stateCensusRecords.size() - 1; iterate++) {
-            for (int Inneriterate = 0; Inneriterate < stateCensusRecords.size() - iterate - 1; Inneriterate++) {
-                CSVStateCensus census1 = stateCensusRecords.get(Inneriterate);
-                CSVStateCensus census2 = stateCensusRecords.get(Inneriterate + 1);
+    //Sorting in a JSON formats to State Code Data
+    public String getStateWiseSortedCodeData() throws CSVBuilderException {
+        if (stateCensusCodesRecord == null || stateCensusCodesRecord.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
+        Comparator<CSVState> stateCodeCSVCoparator = Comparator.comparing(csvState -> csvState.getStateCode());
+        this.sort(stateCodeCSVCoparator, stateCensusCodesRecord);
+        String sortedStateCodeJson = new Gson().toJson(stateCensusCodesRecord);
+        return sortedStateCodeJson;
+    }
+
+    //Sort method csv file for generic
+    private <E> void sort(Comparator<E> censusCSVComparator, List censusRecords) {
+        for (int iterate = 0; iterate < censusRecords.size() - 1; iterate++) {
+            for (int Inneriterate = 0; Inneriterate < censusRecords.size() - iterate - 1; Inneriterate++) {
+                E census1 = (E) censusRecords.get(Inneriterate);
+                E census2 = (E) censusRecords.get(Inneriterate + 1);
                 if (censusCSVComparator.compare(census1, census2) > 0) {
-                    stateCensusRecords.set(Inneriterate, census2);
-                    stateCensusRecords.set(Inneriterate + 1, census1);
+                    censusRecords.set(Inneriterate, census2);
+                    censusRecords.set(Inneriterate + 1, census1);
                 }
             }
         }
