@@ -1,23 +1,21 @@
 package com.bridgelabz.utility;
 
 import com.bridgelabz.exception.CSVBuilderException;
-import com.bridgelabz.exception.StateCensusAnalyserException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class OpenCsvBuilder<E> implements ICSVBuilder {
     //Generic method to iterate through csv file
     @Override
     public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws CSVBuilderException {
         try {
-            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(csvClass);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+            CsvToBean<E> csvToBean = (CsvToBean<E>) this.getCSVBean(reader, csvClass);
             Iterator<E> censusCSVIterator = csvToBean.iterator();
             return censusCSVIterator;
         } catch (IllegalStateException e) {
@@ -25,10 +23,21 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
         }
     }
 
+    @Override
+    public <E> List getCSVFileList(Reader reader, Class<E> csvClass) throws CSVBuilderException {
+        return (List<E>) this.getCSVBean(reader, csvClass).parse();
+    }
 
     @Override
-    public List getCSVFileList(Reader reader, Class csvClass) throws CSVBuilderException {
-        return this.getCSVBean(reader, csvClass).parse();
+    public <E> HashMap<E, E> getCSVFileMap(Reader reader, Class csvClass) throws CSVBuilderException {
+        List list = getCSVFileList(reader, csvClass);
+        Map<Integer, Object> map = new HashMap<Integer, Object>();
+        Integer count = 0;
+        for (Object ob : list) {
+            map.put(count, ob);
+            count++;
+        }
+        return (HashMap<E, E>) map;
     }
 
     private CsvToBean<E> getCSVBean(Reader reader, Class csvClass) throws CSVBuilderException {
