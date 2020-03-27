@@ -16,31 +16,18 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class StateCensusAnalyser {
-    //List<CSVStateCensus> stateCensusRecords = null;
-    //List<CSVState> stateCensusCodesRecord = null;
-    Collection<Object> stateCensusRecords = null;
-    Collection<Object> stateCensusCodesRecord = null;
-    HashMap<Object, Object> stateCodeHashMap = null;
-    HashMap<Object, Object> stateCensusHashMap = null;
+    Collection<Object> CensusRecords = null;
+    HashMap<Object, Object> CensusHashMap = null;
     ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
 
-    //Reading and printing data from csv file
-    public int loadCensusCsvData(String SAMPLE_CSV_PATH) throws CSVBuilderException {
+    //Reading data from csv file
+    public int loadCsvData(String SAMPLE_CSV_PATH, Class csvClass) throws CSVBuilderException, IOException {
         try (Reader reader = Files.newBufferedReader(Paths.get(SAMPLE_CSV_PATH));) {
-            stateCensusHashMap = csvBuilder.getCSVFileMap(reader, CSVStateCensus.class);
-            return stateCensusHashMap.size();
-        } catch (IOException e) {
-            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ENTERED_WRONG_FILE, e.getMessage());
-        } catch (RuntimeException e) {
-            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ENTERED_INCORRECT_DELIMITER_OR_HEADER, e.getMessage());
-        }
-    }
-
-    public int loadSateCodeCsvData(String CSV_PATH) throws CSVBuilderException {
-        try (Reader reader = Files.newBufferedReader(Paths.get(CSV_PATH));) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            stateCodeHashMap = csvBuilder.getCSVFileMap(reader, CSVState.class);
-            return stateCodeHashMap.size();
+            //ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            {
+                CensusHashMap = csvBuilder.getCSVFileMap(reader, csvClass);
+                return CensusHashMap.size();
+            }
         } catch (IOException e) {
             throw new CSVBuilderException(CSVBuilderException.Exceptiontype.ENTERED_WRONG_FILE, e.getMessage());
         } catch (RuntimeException e) {
@@ -62,28 +49,28 @@ public class StateCensusAnalyser {
 
     //Sorting in a  JSON formats to StateCensusData
     public String getStateWiseSortedCensusData() throws CSVBuilderException {
-        if (stateCensusHashMap == null || stateCensusHashMap.size() == 0)
+        if (CensusHashMap == null || CensusHashMap.size() == 0)
             throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
         Comparator<CSVStateCensus> censusCSVComparator = Comparator.comparing(csvStateCensus -> csvStateCensus.getState());
-        this.sort(censusCSVComparator, stateCensusHashMap);
-        stateCensusRecords = stateCensusHashMap.values();
-        String sortedStateCensusJson = new Gson().toJson(stateCensusRecords);
+        this.sort(censusCSVComparator, CensusHashMap);
+        CensusRecords = CensusHashMap.values();
+        String sortedStateCensusJson = new Gson().toJson(CensusRecords);
         return sortedStateCensusJson;
     }
 
     //Sorting in a JSON formats to State Code Data
     public String getStateWiseSortedCodeData() throws CSVBuilderException {
-        if (stateCodeHashMap == null || stateCodeHashMap.size() == 0)
+        if (CensusHashMap == null || CensusHashMap.size() == 0)
             throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
         Comparator<CSVState> stateCodeCSVComparator = Comparator.comparing(csvState -> csvState.getStateCode());
-        this.sort(stateCodeCSVComparator, stateCodeHashMap);
-        stateCensusCodesRecord = stateCodeHashMap.values();
-        String sortedStateCodeJson = new Gson().toJson(stateCensusCodesRecord);
+        this.sort(stateCodeCSVComparator, CensusHashMap);
+        CensusRecords = CensusHashMap.values();
+        String sortedStateCodeJson = new Gson().toJson(CensusRecords);
         return sortedStateCodeJson;
     }
 
     //Sort method csv file for generic
-    private <E> void sort(Comparator<E> censusCSVComparator, Map<Object, Object> censusRecords) {
+    public <E> void sort(Comparator<E> censusCSVComparator, Map<Object, Object> censusRecords) {
         for (int iterate = 0; iterate < censusRecords.size() - 1; iterate++) {
             for (int Inneriterate = 0; Inneriterate < censusRecords.size() - iterate - 1; Inneriterate++) {
                 E census1 = (E) censusRecords.get(Inneriterate);
@@ -96,3 +83,4 @@ public class StateCensusAnalyser {
         }
     }
 }
+
