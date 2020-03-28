@@ -12,5 +12,6 @@ public interface ICSVBuilder {
 
     public <E> List getCSVFileList(Reader reader, Class<E> csvClass) throws CSVBuilderException;
 
-    public <E> HashMap<E, E> getCSVFileMap(Reader reader, Class csvClass) throws CSVBuilderException;
+    //public <E> HashMap<E, E> getCSVFileMap(Reader reader, Class csvClass) throws CSVBuilderException;
+
 }
