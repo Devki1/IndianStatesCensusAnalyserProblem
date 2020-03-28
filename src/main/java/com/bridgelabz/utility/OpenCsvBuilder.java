@@ -13,6 +13,7 @@ import java.util.Map;
 public class OpenCsvBuilder<E> implements ICSVBuilder {
     //Generic method to iterate through csv file
     @Override
+
     public <E> Iterator<E> getCSVFileIterator(Reader reader, Class<E> csvClass) throws CSVBuilderException {
         try {
             CsvToBean<E> csvToBean = (CsvToBean<E>) this.getCSVBean(reader, csvClass);
@@ -26,18 +27,6 @@ public class OpenCsvBuilder<E> implements ICSVBuilder {
     @Override
     public <E> List getCSVFileList(Reader reader, Class<E> csvClass) throws CSVBuilderException {
         return (List<E>) this.getCSVBean(reader, csvClass).parse();
-    }
-
-    @Override
-    public <E> HashMap<E, E> getCSVFileMap(Reader reader, Class csvClass) throws CSVBuilderException {
-        List list = getCSVFileList(reader, csvClass);
-        Map<Integer, Object> map = new HashMap<Integer, Object>();
-        Integer count = 0;
-        for (Object ob : list) {
-            map.put(count, ob);
-            count++;
-        }
-        return (HashMap<E, E>) map;
     }
 
     private CsvToBean<E> getCSVBean(Reader reader, Class csvClass) throws CSVBuilderException {
