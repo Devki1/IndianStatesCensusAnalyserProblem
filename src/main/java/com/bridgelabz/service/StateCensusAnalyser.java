@@ -101,11 +101,22 @@ public class StateCensusAnalyser {
                 new ArrayList<Map.Entry<String, IndianCensusDAO>>(entries);
         Collections.sort(listOfEntries, censusComparator);
         LinkedHashMap<String, IndianCensusDAO> sortedByValue =
-                new LinkedHashMap<String , IndianCensusDAO>(listOfEntries.size());
+                new LinkedHashMap<String, IndianCensusDAO>(listOfEntries.size());
         // Coping list to map
         for (Map.Entry<String, IndianCensusDAO> entry : listOfEntries) {
             sortedByValue.put(entry.getKey(), entry.getValue());
         }
         return sortedByValue;
+    }
+    public String getStateCensusPopulationWiseSortedData() throws CSVBuilderException {
+        if (censusDAOMap == null || censusDAOMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "No data found");
+        Comparator<Map.Entry<String, IndianCensusDAO>> stateCensusCSVComparator =
+                Comparator.comparing(census -> census.getValue().population);
+        LinkedHashMap<String, IndianCensusDAO> sortedByValue = this.sort(stateCensusCSVComparator);
+        ArrayList<IndianCensusDAO> sortedList = new ArrayList<IndianCensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
+        return sortedStateCensusPopulationJson;
     }
 }
