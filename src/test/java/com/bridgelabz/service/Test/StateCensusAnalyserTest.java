@@ -162,4 +162,16 @@ public class StateCensusAnalyserTest {
         Assert.assertEquals("AD", indianCensusDAOS[0].stateCode);
         Assert.assertEquals("WB", indianCensusDAOS[36].stateCode);
     }
+    @Test
+    public void givenStateCensusCsvFile_WhenSortedOnPopulation_ShouldReturnSortedList() throws CSVBuilderException {
+        try {
+            stateCensusAnalyser.loadStateCensusData(SIMPLE_CSV_PATH);
+            String sortedStateCensusData = stateCensusAnalyser.getStateCensusPopulationWiseSortedData();
+            IndianCensusDAO[] stateCensusesCSV = new Gson().fromJson(sortedStateCensusData, IndianCensusDAO[].class);
+            Assert.assertEquals("Uttar Pradesh", stateCensusesCSV[0].state);
+            Assert.assertEquals("Sikkim", stateCensusesCSV[28].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
 }
