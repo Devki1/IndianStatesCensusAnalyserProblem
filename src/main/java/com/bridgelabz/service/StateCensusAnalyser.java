@@ -108,11 +108,25 @@ public class StateCensusAnalyser {
         }
         return sortedByValue;
     }
+
     public String getStateCensusPopulationWiseSortedData() throws CSVBuilderException {
         if (censusDAOMap == null || censusDAOMap.size() == 0)
-            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "No data found");
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
         Comparator<Map.Entry<String, IndianCensusDAO>> stateCensusCSVComparator =
                 Comparator.comparing(census -> census.getValue().population);
+        LinkedHashMap<String, IndianCensusDAO> sortedByValue = this.sort(stateCensusCSVComparator);
+        ArrayList<IndianCensusDAO> sortedList = new ArrayList<IndianCensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
+        return sortedStateCensusPopulationJson;
+    }
+
+    //Sorting csv state census data  density wise
+    public String getStateCensusPopulationDensityWiseSortedData() throws CSVBuilderException {
+        if (censusDAOMap == null || censusDAOMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Dtat empty");
+        Comparator<Map.Entry<String, IndianCensusDAO>> stateCensusCSVComparator =
+                Comparator.comparing(census -> census.getValue().densityPerSqKm);
         LinkedHashMap<String, IndianCensusDAO> sortedByValue = this.sort(stateCensusCSVComparator);
         ArrayList<IndianCensusDAO> sortedList = new ArrayList<IndianCensusDAO>(sortedByValue.values());
         Collections.reverse(sortedList);
