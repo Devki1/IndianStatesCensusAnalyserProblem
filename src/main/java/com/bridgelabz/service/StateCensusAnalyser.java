@@ -133,4 +133,17 @@ public class StateCensusAnalyser {
         String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
         return sortedStateCensusPopulationJson;
     }
+
+    //Sorting csv state census data  area wise
+    public String getStateCensusLargestAreaWiseSortedData() throws CSVBuilderException {
+        if (censusDAOMap == null || censusDAOMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "Data empty");
+        Comparator<Map.Entry<String, IndianCensusDAO>> stateCensusCSVComparator =
+                Comparator.comparing(census -> census.getValue().areaInSqKm);
+        LinkedHashMap<String, IndianCensusDAO> sortedByValue = this.sort(stateCensusCSVComparator);
+        ArrayList<IndianCensusDAO> sortedList = new ArrayList<IndianCensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
+        return sortedStateCensusPopulationJson;
+    }
 }
