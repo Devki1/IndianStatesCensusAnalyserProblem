@@ -14,6 +14,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
 
@@ -45,10 +46,12 @@ public class StateCensusAnalyser {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvPath));) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<CSVState> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVState.class);
-            while (csvFileIterator.hasNext()) {
-                IndianCensusDAO indianCensusDAO = new IndianCensusDAO(csvFileIterator.next());
-                this.censusDAOMap.put(indianCensusDAO.stateCode, indianCensusDAO);
-            }
+            Iterable<CSVState> csvStatesCodeIterable = () -> csvFileIterator;
+            StreamSupport.stream(csvStatesCodeIterable.spliterator(), false)
+                    .map(CSVState.class::cast)
+                    .forEach(csvStateCode -> censusDAOMap.put(csvStateCode.getStateName(), new IndianCensusDAO(csvStateCode)));
+
+
             return censusDAOMap.size();
         } catch (IOException e) {
             throw new CSVBuilderException
