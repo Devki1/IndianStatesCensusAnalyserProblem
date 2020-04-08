@@ -26,6 +26,7 @@ public class StateCensusAnalyser {
         return censusDAOMap.size();
     }
 
+
     //Read file extension
     public void getFileExtension(File file) throws CSVBuilderException {
         String extension = "";
@@ -96,6 +97,19 @@ public class StateCensusAnalyser {
         Comparator<Map.Entry<String, CensusDAO>> stateCensusCSVComparator =
                 Comparator.comparing(census -> census.getValue().areaInSqKm);
         LinkedHashMap<String, CensusDAO> sortedByValue = this.sort(stateCensusCSVComparator);
+        ArrayList<CensusDAO> sortedList = new ArrayList<CensusDAO>(sortedByValue.values());
+        Collections.reverse(sortedList);
+        String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
+        return sortedStateCensusPopulationJson;
+    }
+
+    //Sorting USCensus data population wise
+    public String getUSCensusPopulationWiseSortedData() throws CSVBuilderException {
+        if (censusDAOMap == null || censusDAOMap.size() == 0)
+            throw new CSVBuilderException(CSVBuilderException.Exceptiontype.NO_CENSUS_DATA, "No data found");
+        Comparator<Map.Entry<String, CensusDAO>> usCensusCSVComparator =
+                Comparator.comparing(census -> census.getValue().population);
+        LinkedHashMap<String, CensusDAO> sortedByValue = this.sort(usCensusCSVComparator);
         ArrayList<CensusDAO> sortedList = new ArrayList<CensusDAO>(sortedByValue.values());
         Collections.reverse(sortedList);
         String sortedStateCensusPopulationJson = new Gson().toJson(sortedList);
