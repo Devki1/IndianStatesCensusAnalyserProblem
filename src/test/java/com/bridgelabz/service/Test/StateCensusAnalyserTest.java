@@ -223,4 +223,30 @@ public class StateCensusAnalyserTest {
         int totalRecords = stateCensusAnalyser.loadCensusData(US, CSV_US_CENSUS_PATH);
         Assert.assertEquals(51, totalRecords);
     }
+
+    @Test
+    public void givenUSCensusCsvFile_WhenSortedOnPopulation_ShouldReturnSortedList() throws IOException {
+        try {
+            stateCensusAnalyser.loadCensusData(US, CSV_US_CENSUS_PATH);
+            String sortedCensusData = stateCensusAnalyser.getUSCensusPopulationWiseSortedData();
+            CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+            Assert.assertEquals("Wyoming", censusCSV[50].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenUSCensusCsvFile_WhenSortedImproperOnPopulation_ShouldNotReturnSortedList() throws IOException {
+        try {
+            stateCensusAnalyser.loadCensusData(US, CSV_US_CENSUS_PATH);
+            String sortedCensusData = stateCensusAnalyser.getUSCensusPopulationWiseSortedData();
+            CensusDAO[] censusCSV = new Gson().fromJson(sortedCensusData, CensusDAO[].class);
+            Assert.assertNotEquals("Ney York", censusCSV[33].state);
+            Assert.assertNotEquals("Virginia", censusCSV[47].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
 }
