@@ -1,20 +1,16 @@
-package com.bridgelabz.model;
+package com.bridgelabz.dto;
 
 import com.opencsv.bean.CsvBindByName;
 
 public class IndianStateCensusCSV {
     @CsvBindByName(column = "State")
     public String state;
-
     @CsvBindByName(column = "Population")
     public Long population;
-
     @CsvBindByName(column = "AreaInSqKm")
     public Double areaInSqKm;
-
     @CsvBindByName(column = "DensityPerSqkm")
     public Float densityPerSqkm;
-
     public String stateCode = new IndianStateCodeCSV().getStateCode();
 
     public IndianStateCensusCSV() {
@@ -34,8 +30,7 @@ public class IndianStateCensusCSV {
                 "State='" + state + '\'' +
                 ", Population=" + population +
                 ", AreaInSqKm=" + areaInSqKm +
-                ", DensityPerSqkm=" + densityPerSqkm +
-                '}';
+                ", DensityPerSqkm=" + densityPerSqkm + '}';
     }
 }
 
