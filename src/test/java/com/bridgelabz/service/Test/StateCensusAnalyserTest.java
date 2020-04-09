@@ -1,8 +1,8 @@
 package com.bridgelabz.service.Test;
 
 import com.bridgelabz.exception.CSVBuilderException;
-import com.bridgelabz.model.IndianStateCensusCSV;
-import com.bridgelabz.model.USCensus;
+import com.bridgelabz.dto.IndianStateCensusCSV;
+import com.bridgelabz.dto.USCensus;
 import com.bridgelabz.service.CensusAnalyser;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -321,6 +321,31 @@ public class StateCensusAnalyserTest {
             USCensus[] censusCSV = new Gson().fromJson(sortedStatePopulationData, USCensus[].class);
             Assert.assertNotEquals("Alabama", censusCSV[14].state);
             Assert.assertNotEquals("Wyoming", censusCSV[50].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test
+    public void givenIndianStateCensusCSVFile_WhenSortedPopulationAndDensity_ShouldReturnSortedList() {
+        try {
+            indiaCensusAnalyser.loadCensusData(SIMPLE_CSV_PATH);
+            String sortedPopulationAndDensityData = indiaCensusAnalyser.getDualSortByPopulationDensity();
+            IndianStateCensusCSV[] censusCSV = new Gson().fromJson(sortedPopulationAndDensityData, IndianStateCensusCSV[].class);
+            Assert.assertEquals("Uttar Pradesh", censusCSV[0].state);
+            Assert.assertEquals("Mizoram", censusCSV[27].state);
+        } catch (CSVBuilderException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void givenUSCensusCSVFile_WhenSortedPopulationAndDensity_ShouldReturnSortedList() {
+        try {
+            usCensusAnalyser.loadCensusData(CSV_US_CENSUS_PATH);
+            String sortedPopulationAndDensityData = usCensusAnalyser.getDualSortByPopulationDensity();
+            USCensus[] censusCSV = new Gson().fromJson(sortedPopulationAndDensityData, USCensus[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+            Assert.assertEquals("Wyoming", censusCSV[50].state);
         } catch (CSVBuilderException e) {
             e.printStackTrace();
         }
